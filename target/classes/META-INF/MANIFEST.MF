@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: richard
+Class-Path: . lib/opencsv-3.8.jar lib/commons-lang3-3.4.jar lib/common
+ s-beanutils-1.9.2.jar lib/commons-logging-1.1.1.jar lib/commons-colle
+ ctions-3.2.1.jar
+Build-Jdk: 1.8.0_101
+Created-By: Maven Integration for Eclipse
+Main-Class: abmi.bis.batch.App
+
