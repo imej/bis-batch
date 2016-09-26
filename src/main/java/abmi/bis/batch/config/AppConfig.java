@@ -1,4 +1,4 @@
-package abmi.bis.batch;
+package abmi.bis.batch.config;
 
 import java.io.File;
 import java.io.IOException;
