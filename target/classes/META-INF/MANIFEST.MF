@@ -1,8 +1,12 @@
 Manifest-Version: 1.0
 Built-By: richard
-Class-Path: . lib/opencsv-3.8.jar lib/commons-lang3-3.4.jar lib/common
- s-beanutils-1.9.2.jar lib/commons-logging-1.1.1.jar lib/commons-colle
- ctions-3.2.1.jar
+Class-Path: . lib/spring-context-4.2.5.RELEASE.jar lib/spring-aop-4.2.
+ 5.RELEASE.jar lib/aopalliance-1.0.jar lib/spring-beans-4.2.5.RELEASE.
+ jar lib/spring-core-4.2.5.RELEASE.jar lib/commons-logging-1.2.jar lib
+ /spring-expression-4.2.5.RELEASE.jar lib/spring-tx-4.2.5.RELEASE.jar 
+ lib/system-rules-1.16.1.jar lib/opencsv-3.8.jar lib/commons-lang3-3.4
+ .jar lib/commons-beanutils-1.9.2.jar lib/commons-collections-3.2.1.ja
+ r
 Build-Jdk: 1.8.0_101
 Created-By: Maven Integration for Eclipse
 Main-Class: abmi.bis.batch.App

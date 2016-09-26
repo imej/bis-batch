@@ -1,6 +1,5 @@
 package abmi.bis.batch.service;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,12 +19,6 @@ public class CSVServiceImpl implements CSVService {
 		List<CSVRow> list = null;
 		
 		LOGGER.info("Start parsing file: " + filePath);
-		
-		File file = new File(filePath);
-		if ( !file.exists() ) {
-			LOGGER.severe("'" + filePath + "' does not exist.");
-			return list;
-		}
 		
 		CSVReader reader = null;
 		int i = 0;

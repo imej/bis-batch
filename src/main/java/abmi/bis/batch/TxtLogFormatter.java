@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+import org.springframework.stereotype.Component;
+
+@Component("txtLogFormatter")
 public class TxtLogFormatter extends Formatter {
 
 	@Override

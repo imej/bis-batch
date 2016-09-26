@@ -1,8 +1,11 @@
 package abmi.bis.batch;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import abmi.bis.batch.model.CSVRow;
 import abmi.bis.batch.service.CSVService;
@@ -15,27 +18,45 @@ import abmi.bis.batch.service.CSVServiceImpl;
  */
 public class App {
 
-	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
+		ApplicationContext ctx = new AnnotationConfigApplicationContext("abmi.bis.batch");
+		CustomLogger customLogger = ctx.getBean(CustomLogger.class);
+		Logger logger = customLogger.getLogger();
 		
-		try {
-			CustomLogger.setup();
-		} catch (IOException e) {
-			e.printStackTrace();
+		
+		logger.info("Batch started.");
+		
+		/*
+		 * Make sure we can run:
+		 * - CSV file exists
+		 * - Temporary folder exists
+		 * - WAC2WAV is installed - wac2wav.exe exists in the same folder
+		 * - SOX is installed
+		 * - Network folder is reachable
+		 * - Database is accessible
+		 */
+		if (args.length == 0) {
+			logger.severe("CSV file is not provided.");
+			return;
 		}
 		
-		LOGGER.info("Batch started.");
+		File file = new File(args[0]);
+		if ( !file.exists() ) {
+			logger.severe("'" + args[0] + "' does not exist.");
+			return;
+		}
 		
-		String csvFile = "/Users/richard/Downloads/csv-sample.csv";
+		
+		
 		
 		CSVService cs = new CSVServiceImpl();
-		List<CSVRow> list = cs.parse(csvFile);
+		List<CSVRow> list = cs.parse(args[0]);
 		
 		for(CSVRow row : list) {
 			System.out.println(row);
 		}
 		
-		LOGGER.info("All done.");
+		logger.info("All done.");
 	}
 }
