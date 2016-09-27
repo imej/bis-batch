@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
  * Application configuration file.
@@ -76,4 +80,27 @@ public class AppConfig {
         messageSource.setBasename("messages");
         return messageSource;
     }
+    
+    /**
+     * DataSource bean
+     */
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getRequiredProperty("jdbc.driverClassName"));
+        dataSource.setUrl(env.getRequiredProperty("jdbc.url"));
+        dataSource.setUsername(env.getRequiredProperty("jdbc.username"));
+        dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
+        return dataSource;
+    }
+    
+    /**
+     * JdbcTemplate bean
+     */
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    	return new JdbcTemplate(dataSource);
+    }
+    
+    
 }

@@ -1,4 +1,4 @@
-package abmi.bis.batch;
+package abmi.bis.batch.test;
 
 import static org.junit.Assert.*;
 

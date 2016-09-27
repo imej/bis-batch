@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import abmi.bis.batch.controller.AppController;
 import abmi.bis.batch.model.CSVRow;
 import abmi.bis.batch.service.CSVService;
 import abmi.bis.batch.service.CSVServiceImpl;
@@ -18,25 +19,15 @@ import abmi.bis.batch.service.CSVServiceImpl;
  */
 public class App {
 
-	
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		ApplicationContext ctx = new AnnotationConfigApplicationContext("abmi.bis.batch");
+		AppController appCon = ctx.getBean(AppController.class);
 		CustomLogger customLogger = ctx.getBean(CustomLogger.class);
+		
 		Logger logger = customLogger.getLogger();
-		
-		
 		logger.info("Batch started.");
 		
-		/*
-		 * Make sure we can run:
-		 * - CSV file exists
-		 * - Temporary folder exists
-		 * - WAC2WAV is installed - wac2wav.exe exists in the same folder
-		 * - SOX is installed
-		 * - Network folder is reachable
-		 * - Database is accessible
-		 */
 		if (args.length == 0) {
 			logger.severe("CSV file is not provided.");
 			return;
@@ -48,15 +39,17 @@ public class App {
 			return;
 		}
 		
-		
-		
-		
-		CSVService cs = new CSVServiceImpl();
-		List<CSVRow> list = cs.parse(args[0]);
-		
-		for(CSVRow row : list) {
-			System.out.println(row);
+		if (!appCon.isReady(args[0])) {
+			logger.severe("Cannot continue.");
+			return;
 		}
+		
+//		CSVService cs = new CSVServiceImpl();
+//		List<CSVRow> list = cs.parse(args[0]);
+//		
+//		for(CSVRow row : list) {
+//			System.out.println(row);
+//		}
 		
 		logger.info("All done.");
 	}
