@@ -7,18 +7,25 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.opencsv.CSVReader;
 
+import abmi.bis.batch.CustomLogger;
 import abmi.bis.batch.model.CSVRow;
 
+@Service("cSVService")
 public class CSVServiceImpl implements CSVService {
 
-	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	@Autowired
+	private CustomLogger customLogger;
 	
 	public List<CSVRow> parse(String filePath) {
 		List<CSVRow> list = null;
+		Logger logger = customLogger.getLogger();
 		
-		LOGGER.info("Start parsing file: " + filePath);
+		logger.info("Start parsing file: " + filePath);
 		
 		CSVReader reader = null;
 		int i = 0;
@@ -30,9 +37,9 @@ public class CSVServiceImpl implements CSVService {
 			prop.load(input);
 			Boolean hasHeader = prop.getProperty("csv.hasHeader").equals("true");
 			if ( hasHeader ) {
-				LOGGER.info("First row includes header columns.");
+				logger.info("First row includes header columns.");
 			} else {
-				LOGGER.info("First row does NOT include header columns.");
+				logger.info("First row does NOT include header columns.");
 			}
 			
 			reader = new CSVReader(new FileReader(filePath));
@@ -69,10 +76,10 @@ public class CSVServiceImpl implements CSVService {
 				
 			}
 			
-			LOGGER.info("Complete parsing file: " + filePath + ". " + list.size() + " rows are received.");
+			logger.info("Complete parsing file: " + filePath + ". " + list.size() + " rows are received.");
 			
 		} catch (Exception e) {
-			LOGGER.severe("ERROR: " + e.getMessage());
+			logger.severe("ERROR: " + e.getMessage());
 			e.printStackTrace();
 		}
 				

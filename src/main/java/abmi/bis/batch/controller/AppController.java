@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
 import abmi.bis.batch.CustomLogger;
+import abmi.bis.batch.service.CSVService;
 import abmi.bis.batch.service.DBService;
 
 @Controller
@@ -28,6 +29,9 @@ public class AppController {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private CSVService cSVService;
 	
 	/**
 	 * Make sure we can run:
@@ -72,4 +76,5 @@ public class AppController {
 		
 		return true;
 	}
+	
 }
