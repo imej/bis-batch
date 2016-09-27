@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 
 import abmi.bis.batch.CustomLogger;
@@ -42,7 +43,11 @@ public class CSVServiceImpl implements CSVService {
 				logger.info("First row does NOT include header columns.");
 			}
 			
-			reader = new CSVReader(new FileReader(filePath));
+			CSVParser parser = new CSVParser(CSVParser.DEFAULT_SEPARATOR, 
+					                         CSVParser.DEFAULT_QUOTE_CHARACTER, 
+					                         '\0', 
+					                         CSVParser.DEFAULT_STRICT_QUOTES);
+			reader = new CSVReader(new FileReader(filePath), 0, parser);
 			String[] line;
 			list = new ArrayList<CSVRow>();
 			

@@ -44,12 +44,7 @@ public class App {
 			return;
 		}
 		
-//		CSVService cs = new CSVServiceImpl();
-//		List<CSVRow> list = cs.parse(args[0]);
-//		
-//		for(CSVRow row : list) {
-//			System.out.println(row);
-//		}
+        appCon.processCSV(args[0]);
 		
 		logger.info("All done.");
 	}

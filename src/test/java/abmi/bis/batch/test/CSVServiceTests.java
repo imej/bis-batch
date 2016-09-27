@@ -35,6 +35,9 @@ public class CSVServiceTests {
 		
 		assertNotNull("There should be entries in sample.csv", list);
 		
+		assertTrue("File path of first row", 
+				list.get(0).getFolderPath().equals("C:\\Users\\Hedwig\\Google Drive\\Standards and Procedures\\BISSampleRecordings\\Open"));;
+		
 	}
 	
 }

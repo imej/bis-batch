@@ -1,6 +1,7 @@
 package abmi.bis.batch.controller;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
 import abmi.bis.batch.CustomLogger;
+import abmi.bis.batch.model.CSVRow;
 import abmi.bis.batch.service.CSVService;
 import abmi.bis.batch.service.DBService;
 
@@ -68,6 +70,36 @@ public class AppController {
 			return false;
         }
         
+        // check WAC2WAV - does the executable exist?
+        String wac2wavExe = env.getRequiredProperty("wac2wav.exe");
+        if (wac2wavExe == null) {
+        	logger.severe(messageSource.getMessage("wac2wav.not.define", null, Locale.getDefault()));
+			return false;
+        }
+        
+        file = new File(wac2wavExe);
+        if ( !file.exists() ) {
+        	logger.severe(messageSource.getMessage("wac2wav.not.exist", new String[] {wac2wavExe}, Locale.getDefault()));
+			return false;
+        }
+        
+        // check SOX - does the installation folder exist?
+        String soxFolder = env.getRequiredProperty("sox.path");
+        if (soxFolder == null) {
+        	logger.severe(messageSource.getMessage("sox.not.define", null, Locale.getDefault()));
+			return false;
+        }
+        
+        file = new File(soxFolder);
+        if ( !file.exists() ) {
+        	logger.severe(messageSource.getMessage("sox.not.exist", new String[] {soxFolder}, Locale.getDefault()));
+			return false;
+        }
+        
+        // TODO test network drive
+        
+        
+        
         // check db connection
 		if ( !dBService.isConnected() ) {
 			logger.severe(messageSource.getMessage("db.not.connect", null, Locale.getDefault()));
@@ -75,6 +107,14 @@ public class AppController {
 		}
 		
 		return true;
+	}
+	
+	public void processCSV(String csv) {
+		List<CSVRow> list = cSVService.parse(csv);
+		
+		for(CSVRow row : list) {
+			System.out.println(row);
+		}
 	}
 	
 }
