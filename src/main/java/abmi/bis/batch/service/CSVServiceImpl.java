@@ -29,7 +29,7 @@ public class CSVServiceImpl implements CSVService {
 		logger.info("Start parsing file: " + filePath);
 		
 		CSVReader reader = null;
-		int i = 0;
+		int i = 1;
 		Properties prop = new Properties();
 		InputStream input = null;
 		
@@ -52,7 +52,7 @@ public class CSVServiceImpl implements CSVService {
 			list = new ArrayList<CSVRow>();
 			
 			while ((line = reader.readNext()) != null) {
-				if (i == 0 && hasHeader) {
+				if (i == 1 && hasHeader) {
 					i++;
 					continue;
 				}
