@@ -114,30 +114,36 @@ public class AppController {
 		for(CSVRow row : list) {
 			System.out.println(row);
 			
-			List<String> lst = new ArrayList<String>();
-			lst.add(settings.getWac2wavExe());
-			lst.add(row.getFolderPath() + File.separator + row.getFileName());
-			lst.add(settings.getTempDir() + File.separator + row.getFileName());
-			
-			ProcessBuilder pb = new ProcessBuilder(lst);
-			
-			Process process;
-			try {
-				process = pb.start();
-				int errCode = process.waitFor();
-				if (errCode == 0) {
-					System.out.println("success!");
-				} else {
-					System.out.println("error!");
+			if (row.getFileType().equals("WAC")) {
+				
+				List<String> lst = new ArrayList<String>();
+				lst.add(settings.getWac2wavExe());
+				lst.add(row.getFolderPath() + File.separator + row.getFileName());
+				lst.add(settings.getTempDir() + File.separator 
+						+ row.getFileName().substring(0, row.getFileName().indexOf(".wac")) + ".wav");
+				
+				ProcessBuilder pb = new ProcessBuilder(lst);
+				
+				System.out.println(lst);
+				
+				Process process;
+				try {
+					process = pb.start();
+					int errCode = process.waitFor();
+					if (errCode == 0) {
+						System.out.println("success!");
+					} else {
+						System.out.println("error!");
+					}
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				break;
 			}
-			
-			break;
-			
+						
 		}
 	}
 	

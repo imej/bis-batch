@@ -1,11 +1,11 @@
-FolderPath,FileName,ReplicateNumber,LANumber,Method,Observer
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Open,ABMI-0272-NE_20160621_053400.wav,1,100,11,1
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Open,FMX-01-01-I_20140603_080000.wac,1,40,8,23
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Open,OW-12-37-CT_20140406_000000.wac,1,30,0,22
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,ABMI-0001-NE_0+1_20150531_072300.wac,1,50,14,59
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,ABMI-0001-SE_0+1_20150603_072000.wac,1,50,14,59
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,ABMI-0272-NE_20160622_070400.wav,1,100,14,59
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,FMX-01-01-E_20140603_050000.wac,1,40,8,23
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,FMX-01-01-I_20140603_050000.wac,1,40,8,23
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,OW-12-35-CT_20140410_000000.wac,1,30,0,22
-C:\Users\Hedwig\Google Drive\Standards and Procedures\BISSampleRecordings\Done,OW-12-37-CT_20140405_000000.wac,1,30,0,22
+FolderPath,FileName,ReplicateNumber,LANumber,Method,Observer,Year,Round
+C:\temp\bis-batch\csv\recordings\open,ABMI-0272-NE_20160621_053400.wav,1,100,11,1,2016,2
+C:\temp\bis-batch\csv\recordings\open,FMX-01-01-I_20140603_080000.wac,1,40,8,23,2014,2
+C:\temp\bis-batch\csv\recordings\open,OW-12-37-CT_20140406_000000.wac,1,30,0,22,2014,1
+C:\temp\bis-batch\csv\recordings\closed,ABMI-0001-NE_0+1_20150531_072300.wac,1,50,14,59,2015,2
+C:\temp\bis-batch\csv\recordings\closed,ABMI-0001-SE_0+1_20150603_072000.wac,1,50,14,59,2015,2
+C:\temp\bis-batch\csv\recordings\closed,ABMI-0272-NE_20160622_070400.wav,1,100,14,59,2014,2
+C:\temp\bis-batch\csv\recordings\closed,FMX-01-01-E_20140603_050000.wac,1,40,8,23,2014,2
+C:\temp\bis-batch\csv\recordings\closed,FMX-01-01-I_20140603_050000.wac,1,40,8,23,2014,2
+C:\temp\bis-batch\csv\recordings\closed,OW-12-35-CT_20140410_000000.wac,1,30,0,22,2014,1
+C:\temp\bis-batch\csv\recordings\closed,OW-12-37-CT_20140405_000000.wac,1,30,0,22,2014,1

@@ -8,7 +8,7 @@ import java.util.Date;
  * Represents a row of the CSV file.
  * 
  * TODO discuss with Hedwig that column FileType and FileSize are not needed,
- *       Replicate Number is needed.
+ *       Replicate Number, year and round are needed.
  *       
  * @author Richard Cao
  *
@@ -22,6 +22,8 @@ public class CSVRow {
 	private long method;
 	private int observer;
 	private int replicateNumber;
+	private int year;
+	private int round;
 	
 	// values calculated based on the information
 	// of the CSV file
@@ -81,6 +83,18 @@ public class CSVRow {
 		this.replicateNumber = replicateNumber;
 	}
 	
+	public int getYear() {
+		return year;
+	}
+	public void setYear(int year) {
+		this.year = year;
+	}
+	public int getRound() {
+		return round;
+	}
+	public void setRound(int round) {
+		this.round = round;
+	}
 	public String getProject() {
 		return project;
 	}

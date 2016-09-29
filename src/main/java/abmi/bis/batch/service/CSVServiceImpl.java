@@ -65,6 +65,8 @@ public class CSVServiceImpl implements CSVService {
 				 * 3 - lANumber
 				 * 4 - method
 				 * 5 - observer
+				 * 6 - year
+				 * 7 - round
 				 */
 				CSVRow row = new CSVRow();
 				row.setId(i);
@@ -74,6 +76,8 @@ public class CSVServiceImpl implements CSVService {
 		        row.setLANumber(Long.parseLong(line[3]));
 		        row.setMethod(Long.parseLong(line[4]));
 		        row.setObserver(Integer.parseInt(line[5]));
+				row.setYear(Integer.parseInt(line[6]));
+				row.setRound(Integer.parseInt(line[7]));
 				
 		        list.add(row);
 		        
