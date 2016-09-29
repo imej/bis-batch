@@ -1,6 +1,7 @@
 package abmi.bis.batch.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -8,11 +9,11 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
 import abmi.bis.batch.CustomLogger;
 import abmi.bis.batch.model.CSVRow;
+import abmi.bis.batch.model.Settings;
 import abmi.bis.batch.service.CSVService;
 import abmi.bis.batch.service.DBService;
 
@@ -30,10 +31,10 @@ public class AppController {
 	private DBService dBService;
 	
 	@Autowired
-	private Environment env;
+	private CSVService cSVService;
 	
 	@Autowired
-	private CSVService cSVService;
+	private Settings settings;
 	
 	/**
 	 * Make sure we can run:
@@ -58,7 +59,7 @@ public class AppController {
 		}
 		
 		// check temporary folder
-        String tempDir = env.getRequiredProperty("temp.folder");
+        String tempDir = settings.getTempDir();
         if (tempDir == null) {
         	logger.severe(messageSource.getMessage("tempdir.not.define", null, Locale.getDefault()));
 			return false;
@@ -71,7 +72,7 @@ public class AppController {
         }
         
         // check WAC2WAV - does the executable exist?
-        String wac2wavExe = env.getRequiredProperty("wac2wav.exe");
+        String wac2wavExe = settings.getWac2wavExe();
         if (wac2wavExe == null) {
         	logger.severe(messageSource.getMessage("wac2wav.not.define", null, Locale.getDefault()));
 			return false;
@@ -84,7 +85,7 @@ public class AppController {
         }
         
         // check SOX - does the installation folder exist?
-        String soxFolder = env.getRequiredProperty("sox.path");
+        String soxFolder = settings.getSoxDir();
         if (soxFolder == null) {
         	logger.severe(messageSource.getMessage("sox.not.define", null, Locale.getDefault()));
 			return false;
@@ -114,6 +115,31 @@ public class AppController {
 		
 		for(CSVRow row : list) {
 			System.out.println(row);
+			
+			List<String> lst = new ArrayList<String>();
+			lst.add(settings.getWac2wavExe());
+			lst.add(row.getFolderPath() + File.separator + row.getFileName());
+			lst.add(settings.getTempDir() + File.separator + row.getFileName());
+			
+			ProcessBuilder pb = new ProcessBuilder(lst);
+			
+			Process process;
+			try {
+				process = pb.start();
+				int errCode = process.waitFor();
+				if (errCode == 0) {
+					System.out.println("success!");
+				} else {
+					System.out.println("error!");
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			break;
+			
 		}
 	}
 	

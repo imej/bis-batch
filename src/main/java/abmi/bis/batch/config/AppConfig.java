@@ -20,6 +20,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import abmi.bis.batch.model.Settings;
+
 /**
  * Application configuration file.
  * 
@@ -102,5 +104,15 @@ public class AppConfig {
     	return new JdbcTemplate(dataSource);
     }
     
-    
+    @Bean
+    public Settings settings() {
+    	Settings s = new Settings();
+    	
+    	s.setSoxDir(env.getRequiredProperty("sox.path"));
+    	s.setTempDir(env.getRequiredProperty("temp.folder"));
+    	s.setUrlPrefix(env.getRequiredProperty("url.prefix"));
+    	s.setWac2wavExe(env.getRequiredProperty("wac2wav.exe"));
+    	
+    	return s;
+    }
 }
