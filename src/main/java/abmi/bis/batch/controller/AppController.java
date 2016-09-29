@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 
 import abmi.bis.batch.CustomLogger;
@@ -18,7 +17,6 @@ import abmi.bis.batch.service.CSVService;
 import abmi.bis.batch.service.DBService;
 
 @Controller
-@PropertySource(value = { "classpath:application.properties" })
 public class AppController {
 
 	@Autowired
