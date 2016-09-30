@@ -104,6 +104,10 @@ public class AppConfig {
     	return new JdbcTemplate(dataSource);
     }
     
+    /**
+     * Properties
+     * @return
+     */
     @Bean
     public Settings settings() {
     	Settings s = new Settings();
@@ -112,6 +116,13 @@ public class AppConfig {
     	s.setTempDir(env.getRequiredProperty("temp.folder"));
     	s.setUrlPrefix(env.getRequiredProperty("url.prefix"));
     	s.setWac2wavExe(env.getRequiredProperty("wac2wav.exe"));
+    	s.setSoxCmd(env.getRequiredProperty("sox.sox.exe"));
+    	s.setSoxiCmd(env.getRequiredProperty("sox.soxi.exe"));
+    	s.setSpFreq(Integer.parseInt(env.getRequiredProperty("sp.default.freq")));
+    	s.setSpHeight(Integer.parseInt(env.getRequiredProperty("sp.default.height")));
+    	s.setSpLength(Integer.parseInt(env.getRequiredProperty("sp.default.length")));
+    	s.setSpRange(Integer.parseInt(env.getRequiredProperty("sp.default.range")));
+    	s.setSpRes(Integer.parseInt(env.getRequiredProperty("sp.default.res")));
     	
     	return s;
     }

@@ -1,17 +1,12 @@
 package abmi.bis.batch;
 
 import java.io.File;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import abmi.bis.batch.controller.AppController;
-import abmi.bis.batch.model.CSVRow;
-import abmi.bis.batch.service.CSVService;
-import abmi.bis.batch.service.CSVServiceImpl;
-
 
 /**
  * main
