@@ -1,9 +1,11 @@
 package abmi.bis.batch.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +41,29 @@ public class RecordingServiceImpl implements RecordingService {
 
 	@Override
 	public boolean convertToMPEG3(String fpath) {
-		// TODO Auto-generated method stub
-		return false;
+		if (fpath == null || fpath.length() == 0 || !fpath.endsWith(".wav")) {
+			System.out.println("Error converting file to mp3: MAV file was not provided.");
+			return false;
+		}
+		
+		File file = new File(fpath);
+		if (!file.exists()) {
+			System.out.println("Error converting file to mp3: " + fpath + " not exist.");
+			return false;
+		}
+		
+		String sep = File.separator.equals("\\") ? "\\\\" : File.separator;
+		String[] dirs = fpath.split(sep);
+		String newPath = settings.getTempDir() + File.separator + dirs[dirs.length-1].replace(".wav", ".mp3");
+		
+        String cmd = settings.getSoxCmd() + " " + fpath + " " + newPath;
+        ArrayList<String> output = new ArrayList<String>();
+        int res = runCmd(cmd,output);
+        if ( res > 0 ) {
+                System.out.println("Error converting file to mp3: "+Arrays.toString(output.toArray()));
+                return false;
+        }
+        return true;
 	}
 
 	@Override
