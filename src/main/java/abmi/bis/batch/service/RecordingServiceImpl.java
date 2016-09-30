@@ -10,6 +10,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import abmi.bis.batch.CustomLogger;
 import abmi.bis.batch.model.Settings;
 
 /**
@@ -30,25 +31,25 @@ public class RecordingServiceImpl implements RecordingService {
 	@Autowired
 	private Settings settings;
 	
+	@Autowired
+	private CustomLogger customLogger;
+	
 	@Override
 	public Double getRecordingLength(String fpath) {
+		if (!checkFile(fpath, "Error getting recording length")) {
+			return null;
+		}
+		
 		ArrayList<String> output = new ArrayList<String>();
         if ( 0 == soxi(fpath,"-D",output) ) {
-                return Double.parseDouble(output.get(0));
+            return Double.parseDouble(output.get(0));
         }
         return null;
 	}
 
 	@Override
 	public boolean convertToMPEG3(String fpath) {
-		if (fpath == null || fpath.length() == 0 || !fpath.endsWith(".wav")) {
-			System.out.println("Error converting file to mp3: MAV file was not provided.");
-			return false;
-		}
-		
-		File file = new File(fpath);
-		if (!file.exists()) {
-			System.out.println("Error converting file to mp3: " + fpath + " not exist.");
+		if (!checkFile(fpath, "Error converting file to mp3")) {
 			return false;
 		}
 		
@@ -60,9 +61,12 @@ public class RecordingServiceImpl implements RecordingService {
         ArrayList<String> output = new ArrayList<String>();
         int res = runCmd(cmd,output);
         if ( res > 0 ) {
-                System.out.println("Error converting file to mp3: "+Arrays.toString(output.toArray()));
-                return false;
+        	String msg = "Error converting file to mp3: "+Arrays.toString(output.toArray());
+            System.out.println(msg);
+            customLogger.getLogger().severe(msg);
+            return false;
         }
+        
         return true;
 	}
 
@@ -117,5 +121,31 @@ public class RecordingServiceImpl implements RecordingService {
 		}
 		
 		return 3;
+	}
+	
+	/**
+	 * Make sure a .wav file path is provide and it exists.
+	 * 
+	 * @param fpath
+	 * @param funcName
+	 * @return
+	 */
+	private boolean checkFile(String fpath, String funcName) {
+		if (fpath == null || fpath.length() == 0 || !fpath.endsWith(".wav")) {
+			String msg = funcName + ": WAV file was not provided.";
+			System.out.println(msg);
+			customLogger.getLogger().severe(msg);
+			return false;
+		}
+		
+		File file = new File(fpath);
+		if (!file.exists()) {
+			String msg = funcName + ": " + fpath + " not exist.";
+			System.out.println(msg);
+			customLogger.getLogger().severe(msg);
+			return false;
+		}
+		
+		return true;
 	}
 }
