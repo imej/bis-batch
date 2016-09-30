@@ -1,9 +1,6 @@
 package abmi.bis.batch.controller;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -146,49 +143,11 @@ public class AppController {
 					e.printStackTrace();
 				}
 				
-				/*
-				 * Refer to Sox man page for full details of parameters we use:
-                 * http://sox.sourceforge.net/sox.html
-                 * 
-				 * To get the length of the recording: soxi.exe -D wav_file_path
-				 * To convert a wac to mp3: sox.exe wav_file_path mp3_file_path
-				 * 
-				 */
 				
 				break;
 			}
 						
 		}
 	}
-	
-	
-	/**
-	 * http://stackoverflow.com/questions/14542448/capture-the-output-of-an-external-program-in-java
-     * SoX return values are 0 - success; 1 - cmdline parameter problem; 2 - error in processing
-     * 
-	 * @param cmd
-	 * @param output
-	 * @return
-	 */
-	private int runCmd(String cmd, ArrayList<String> output) {
-		Runtime r = Runtime.getRuntime();
-		Process p;
-		BufferedReader is;
-		String line;
 		
-		try {
-			p = r.exec(cmd);
-			is = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			p.waitFor();
-			while ((line = is.readLine()) != null) {
-				output.add(line);
-			}
-			
-			return p.exitValue();
-		} catch (IOException | InterruptedException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		return 3;
-	}
 }
