@@ -24,6 +24,8 @@ public class CSVRow {
 	private int replicateNumber;
 	private int year;
 	private int round;
+	private long recordId;
+	private long replicateId;
 	
 	// values calculated based on the information
 	// of the CSV file
@@ -82,7 +84,6 @@ public class CSVRow {
 	public void setReplicateNumber(int replicateNumber) {
 		this.replicateNumber = replicateNumber;
 	}
-	
 	public int getYear() {
 		return year;
 	}
@@ -94,6 +95,18 @@ public class CSVRow {
 	}
 	public void setRound(int round) {
 		this.round = round;
+	}
+	public long getRecordId() {
+		return recordId;
+	}
+	public void setRecordId(long recordId) {
+		this.recordId = recordId;
+	}
+	public long getReplicateId() {
+		return replicateId;
+	}
+	public void setReplicateId(long replicateId) {
+		this.replicateId = replicateId;
 	}
 	public String getProject() {
 		return project;
@@ -107,7 +120,6 @@ public class CSVRow {
 	public Date getCreated() {
 		return created;
 	}
-	
 	public String getFileType() {
 		return fileType;
 	}

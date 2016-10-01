@@ -50,6 +50,11 @@ public class DBDaoImpl implements DBDao {
             "    (fd_id, record_date, record_time, file_name, file_type, file_length) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
 	
+	private static final String INSERT_REPLICATE = 
+	        "INSERT INTO replicates " +
+            "    (record_id, rep_num, observer, method) " +
+            "VALUES (?, ?, ?, ?)";
+	
 	@Override
 	public boolean isMetaDataReaday(String project, String site, String station, int year, int round) {
 		boolean rv = false;
@@ -99,14 +104,32 @@ public class DBDaoImpl implements DBDao {
 				}, 
 				keyHolder);
 		
-		return (Long)keyHolder.getKey();
+		row.setRecordId((Long)keyHolder.getKey());
+		return row.getRecordId();
 		
 	}
 
 	@Override
 	public long addReplicate(CSVRow row) {
-		// TODO Auto-generated method stub
-		return 0;
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcOper.update(
+				new PreparedStatementCreator() {
+					public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+						PreparedStatement ps = conn.prepareStatement(INSERT_REPLICATE, new String[]{"rep_id"});
+						
+						int index = 1;
+						ps.setLong(index++, row.getRecordId());
+						ps.setInt(index++, row.getReplicateNumber());
+						ps.setInt(index++, row.getObserver());
+						ps.setLong(index++, row.getMethod());
+
+                        return ps;
+					}
+				}, 
+				keyHolder);
+		
+		row.setReplicateId((Long)keyHolder.getKey());
+		return row.getReplicateId();
 	}
 
 	@Override
