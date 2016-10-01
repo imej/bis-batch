@@ -3,6 +3,7 @@ package abmi.bis.batch.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents a row of the CSV file.
@@ -38,6 +39,9 @@ public class CSVRow {
 	                            // ----------------------
 	
 	private String fileType;    // WAC, WAV or UNKNOWN
+	
+	private List<Spectrogram> spectrograms;
+	private Double recordingLength;
 	
 	
 	public long getId() {
@@ -122,6 +126,18 @@ public class CSVRow {
 	}
 	public String getFileType() {
 		return fileType;
+	}
+	public List<Spectrogram> getSpectrograms() {
+		return spectrograms;
+	}
+	public void setSpectrograms(List<Spectrogram> spectrograms) {
+		this.spectrograms = spectrograms;
+	}
+	public Double getRecordingLength() {
+		return recordingLength;
+	}
+	public void setRecordingLength(Double recordingLength) {
+		this.recordingLength = recordingLength;
 	}
 	private void setFileType() {
 		if (fileName.endsWith(".wac")) {

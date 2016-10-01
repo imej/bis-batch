@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import abmi.bis.batch.model.CSVRow;
 import abmi.bis.batch.service.RecordingService;
 
 @ContextConfiguration(classes = abmi.bis.batch.config.AppConfig.class, loader = AnnotationConfigContextLoader.class)
@@ -41,6 +42,26 @@ public class RecordingServiceTests {
 		File file = new File(mp3);
 		
 		assertTrue("mp3 was not generated", file.exists());
+		
+	}
+	
+	@Test
+	public void testCreateSpectrograms() {
+        CSVRow row = new CSVRow();
+		
+		row.setId(1);
+		row.setFolderPath("C:\\temp\\bis-batch\\recordings\\temp");
+		row.setFileName("CAO-ExcitingSite-S1_20160621_053400.wav");
+		row.setReplicateNumber(1);
+        row.setLANumber(100);
+        row.setMethod(11);
+        row.setObserver(1);
+		row.setYear(2008);
+		row.setRound(10);
+		
+		rs.createSpectrograms(row);
+		
+		assertTrue("30 spectrograms should be created.", row.getSpectrograms().size() == 30);
 		
 	}
 }

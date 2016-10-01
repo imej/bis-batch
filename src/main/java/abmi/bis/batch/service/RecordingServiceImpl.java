@@ -1,17 +1,23 @@
 package abmi.bis.batch.service;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import abmi.bis.batch.CustomLogger;
+import abmi.bis.batch.model.CSVRow;
 import abmi.bis.batch.model.Settings;
+import abmi.bis.batch.model.Spectrogram;
 
 /**
  * Implement RecordingService with SoX. Mainly from Paul Morrill's code.
@@ -71,9 +77,102 @@ public class RecordingServiceImpl implements RecordingService {
 	}
 
 	@Override
-	public boolean createSpectrograms(String fpath) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createSpectrograms(CSVRow row) {
+		ArrayList<String> output = new ArrayList<String>();
+		
+		if ( row.getRecordingLength() == null ) {
+			row.setRecordingLength(getRecordingLength(row.getFolderPath() + File.separator + row.getFileName()));
+		}
+		
+		if (row.getRecordingLength() != null) {
+			// spectrograms will be saved in the same folder as the mp3
+			// and within a subfolder named as the file name of the recording
+			String spTempPath = settings.getTempDir() + File.separator 
+					+ row.getFileName().substring(0, row.getFileName().length()-4);
+			File dir = new File(spTempPath);
+			if (!dir.mkdir()) {
+				System.out.println("cannot create dir " + spTempPath);
+				return false;
+			}
+			
+			String outPath;
+			Double lenTotal = row.getRecordingLength();
+			Spectrogram tempSpec;
+			BufferedImage readImage = null;
+			List<Spectrogram> spectrograms = new ArrayList<Spectrogram>();
+			
+			try {
+				if (lenTotal == 0) return false;
+				int segs = 1;
+				double start = 0, process = settings.getSpLength();
+				
+				/* start with a mono version of the png files */
+				String ch = "M", remix = "remix -";
+				do {
+					/* output file segment name */
+					outPath = spTempPath + File.separator + ch + segs + ".png";
+					
+					if ( process + start > lenTotal ) process = lenTotal - start;
+					
+					String cmd = settings.getSoxCmd() + " " + 
+					        row.getFolderPath() + File.separator + 
+					        row.getFileName() + " -n -V" +
+                            " rate " + settings.getSpFreq() + "k " + remix +
+                            " trim " + start + " " + process +
+                            " spectrogram -l -m -X " + settings.getSpRes() +
+                            " -z " + settings.getSpRange() +
+                            " -r -Y " + settings.getSpHeight() + " -o " + outPath;// + " 2>&1";
+					
+					output.clear();
+					if (runCmd(cmd, output) > 0) {
+						/* error */
+						System.out.println(output);
+						break;
+					}
+					
+					// add spectrogram to row
+					tempSpec = new Spectrogram();
+					tempSpec.setFilePath(outPath);
+					
+					readImage = ImageIO.read(new File(outPath));
+					tempSpec.setWidth(readImage.getWidth());
+					tempSpec.setHeight(readImage.getHeight());
+					
+					spectrograms.add(tempSpec);
+					segs++;
+					start += process;
+					if (start < lenTotal - 1) continue;
+					switch (ch) {
+					    case "M":
+					    	/* now loop and do a left channel version */
+					    	ch = "L"; 
+					    	remix = "remix 1";
+                            start = 0; 
+                            process = settings.getSpLength();
+                            segs = 1;
+                            break;
+                    case "L":
+                            /* now loop and do a right channel version */
+                            ch = "R"; 
+                            remix = "remix 2";
+                            start = 0; 
+                            process = settings.getSpLength();
+                            segs = 1;
+                            break;
+                    case "R":
+                            /* done - break out */
+                            segs = -1;
+					}
+				} while (segs >= 0);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+			row.setSpectrograms(spectrograms);
+		}
+		
+		return true;
 	}
 	
 	/**
