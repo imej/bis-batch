@@ -43,6 +43,8 @@ public class RecordingServiceTests {
 		
 		assertTrue("mp3 was not generated", file.exists());
 		
+		file.delete();
+		
 	}
 	
 	@Test
@@ -62,6 +64,8 @@ public class RecordingServiceTests {
 		rs.createSpectrograms(row);
 		
 		assertTrue("30 spectrograms should be created.", row.getSpectrograms().size() == 30);
+		
+		
 		
 	}
 }

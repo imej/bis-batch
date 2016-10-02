@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +15,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import abmi.bis.batch.model.CSVRow;
+import abmi.bis.batch.model.Settings;
+import abmi.bis.batch.model.Spectrogram;
 import abmi.bis.batch.service.RecordingService;
 
 @Repository("dBDao")
@@ -24,6 +27,9 @@ public class DBDaoImpl implements DBDao {
 	
 	@Autowired
 	private RecordingService recordingService;
+	
+	@Autowired
+	private Settings settings;
 	
 	private static final String QUERY_FIELD_DATA_ID = 
 			"SELECT field_data.fd_id FROM projects " +
@@ -53,6 +59,11 @@ public class DBDaoImpl implements DBDao {
 	private static final String INSERT_REPLICATE = 
 	        "INSERT INTO replicates " +
             "    (record_id, rep_num, observer, method) " +
+            "VALUES (?, ?, ?, ?)";
+	
+	private static final String INSERT_SPECTROGRAM = 
+	        "INSERT INTO spectrograms " +
+            "    (record_id, file_name, width, height) " +
             "VALUES (?, ?, ?, ?)";
 	
 	@Override
@@ -134,8 +145,28 @@ public class DBDaoImpl implements DBDao {
 
 	@Override
 	public boolean addSpectrograms(CSVRow row) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		String specDir = getSpectrogramDir(row);
+		
+		jdbcOper.batchUpdate(INSERT_SPECTROGRAM, new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				Spectrogram sp = row.getSpectrograms().get(i);
+				int index = 1;
+				ps.setLong(index++, row.getRecordId());
+				ps.setString(index++, specDir + getSpectrogramFileName(sp));
+				ps.setInt(index++, sp.getWidth());
+				ps.setLong(index++, sp.getHeight());
+			}
+			
+			@Override
+			public int getBatchSize() {
+				return row.getSpectrograms().size();
+			}
+		});
+		
+		return true;
 	}
 
 	private Long getFieldDataId(String project, String site, String station, int year, int round) {
@@ -148,5 +179,44 @@ public class DBDaoImpl implements DBDao {
 			l = -1L;
 		}
 		return l;
+	}
+	
+	/**
+	 * Get the folder (URL) that the spectrograms will be saved on the web server.
+	 * 
+	 * @param row
+	 * @return
+	 */
+	private String getSpectrogramDir(CSVRow row) {
+		// URL root to mp3 and spectrograms
+		StringBuffer url = new StringBuffer(settings.getUrlPrefix());
+		
+		if (!url.toString().endsWith("/")) {
+			url.append("/");
+		}
+		
+		url.append(row.getProject());
+		url.append("/");
+		url.append(row.getSite());
+		url.append("/");
+		url.append(row.getStation());
+		url.append("/");
+		url.append(row.getYear());
+		url.append("/");
+		url.append(row.getRound());
+		url.append("/");
+		
+		return url.toString();
+	}
+	
+	private String getSpectrogramFileName(Spectrogram spectrogram) {
+		if (spectrogram == null || spectrogram.getFilePath() == null || spectrogram.getFilePath().equals("")) {
+			return null;
+		}
+		
+		String sep = File.separator.equals("\\") ? "\\\\" : File.separator;
+		String[] dirs = spectrogram.getFilePath().split(sep);
+		
+		return dirs[dirs.length-1];
 	}
 }

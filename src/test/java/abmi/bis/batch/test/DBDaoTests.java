@@ -82,4 +82,5 @@ public class DBDaoTests {
 		
 		assertTrue("New recording ID must > 0", l > 0);
 	}
+	
 }

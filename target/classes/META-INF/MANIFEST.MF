@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: richard.cao
+Built-By: Richard.Cao
 Class-Path: . lib/spring-context-4.2.5.RELEASE.jar lib/spring-aop-4.2.
  5.RELEASE.jar lib/aopalliance-1.0.jar lib/spring-beans-4.2.5.RELEASE.
  jar lib/spring-core-4.2.5.RELEASE.jar lib/commons-logging-1.2.jar lib
