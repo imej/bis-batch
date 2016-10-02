@@ -198,7 +198,6 @@ public class RecordingServiceImpl implements RecordingService {
                     break;
             case 3: msg = "Error running soxi: Return 3 - Exception in command processing code... command: " + cmd;
                     break;
-            default: msg = "Error running soxi command: " + cmd;
         }
         
         if (msg != null) {
