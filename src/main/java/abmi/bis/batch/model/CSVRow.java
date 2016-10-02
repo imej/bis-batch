@@ -40,6 +40,8 @@ public class CSVRow {
 	
 	private String fileType;    // WAC, WAV or UNKNOWN
 	
+	private String wacPath;     // absolute path to the WAC file 
+	private String wavPath;     // absolute path to the WAV file
 	private List<Spectrogram> spectrograms;
 	private Double recordingLength;
 	
@@ -138,6 +140,18 @@ public class CSVRow {
 	}
 	public void setRecordingLength(Double recordingLength) {
 		this.recordingLength = recordingLength;
+	}
+	public String getWacPath() {
+		return wacPath;
+	}
+	public void setWacPath(String wacPath) {
+		this.wacPath = wacPath;
+	}
+	public String getWavPath() {
+		return wavPath;
+	}
+	public void setWavPath(String wavPath) {
+		this.wavPath = wavPath;
 	}
 	private void setFileType() {
 		if (fileName.endsWith(".wac")) {

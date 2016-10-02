@@ -113,7 +113,7 @@ public class AppController {
 	public void processCSV(String csv) {
 		List<CSVRow> list = cSVService.parse(csv);
 		
-		String wavPath, wacPath, msg;
+		String msg;
 		
 		for(CSVRow row : list) {
 			if (settings.isDebug()) {
@@ -139,13 +139,13 @@ public class AppController {
 			 * STEP 1: convert WAC to WAV when necessary
 			 */
 			if (row.getFileType().equals("WAC")) {
-				wacPath = row.getFolderPath() + File.separator + row.getFileName();
-				wavPath = settings.getTempDir() + File.separator + row.getFileName().replace(".wac", ".wav");
+				row.setWacPath(row.getFolderPath() + File.separator + row.getFileName());
+				row.setWavPath(settings.getTempDir() + File.separator + row.getFileName().replace(".wac", ".wav"));
 				
 				List<String> lst = new ArrayList<String>();
 				lst.add(settings.getWac2wavExe());
-				lst.add(wacPath);
-				lst.add(wavPath);
+				lst.add(row.getWacPath());
+				lst.add(row.getWavPath());
 				
 				ProcessBuilder pb = new ProcessBuilder(lst);
 				
@@ -157,18 +157,19 @@ public class AppController {
 				try {
 					process = pb.start();
 					if (process.waitFor() != 0) {
-						msg = "Error: failed to convert " + wacPath + " to " + wavPath + ". Skip row#" + row.getId();
+						msg = "Error: failed to convert " + row.getWacPath() + " to " + row.getWavPath() + ". Skip row#" + row.getId();
 						customLogger.log(msg, Level.SEVERE);
 						continue;
 					}	
 				} catch (Exception e) {
 					e.printStackTrace();
-					msg = "Error: failed to convert " + wacPath + " to " + wavPath + ". Skip row#" + row.getId();
+					msg = "Error: failed to convert " + row.getWacPath() + " to " + row.getWavPath() + ". Skip row#" + row.getId();
 					customLogger.log(msg, Level.SEVERE);
 					continue;
 				}
 			} else {
-				wavPath = row.getFolderPath() + File.separator + row.getFileName();
+				row.setWacPath(row.getFolderPath() + File.separator + row.getFileName());
+				row.setWavPath(row.getWacPath());
 			}
 			
 			/*
@@ -176,14 +177,14 @@ public class AppController {
 			 *                     - convert to mp3
 			 *                     - create spectrograms 
 			 */
-			row.setRecordingLength(recordingService.getRecordingLength(wavPath));
+			row.setRecordingLength(recordingService.getRecordingLength(row.getWavPath()));
 			
 			if (row.getRecordingLength() == null || !(row.getRecordingLength() > 0)) {
 				msg = "Error: zero length recording. Skip row #" + row.getId();
 				continue;
 			}
 			
-			if ( !recordingService.convertToMPEG3(wavPath) ) {
+			if ( !recordingService.convertToMPEG3(row.getWavPath()) ) {
 				msg = "Error: cannot convert to mp3. Skip row #" + row.getId();
 				continue;
 			}

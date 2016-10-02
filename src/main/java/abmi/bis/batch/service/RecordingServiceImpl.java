@@ -116,8 +116,7 @@ public class RecordingServiceImpl implements RecordingService {
 					if ( process + start > lenTotal ) process = lenTotal - start;
 					
 					String cmd = settings.getSoxCmd() + " " + 
-					        row.getFolderPath() + File.separator + 
-					        row.getFileName() + " -n -V" +
+					        row.getWavPath() + " -n -V" +
                             " rate " + settings.getSpFreq() + "k " + remix +
                             " trim " + start + " " + process +
                             " spectrogram -l -m -X " + settings.getSpRes() +
