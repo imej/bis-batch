@@ -28,5 +28,10 @@ public class CustomLogger {
 	public Logger getLogger() {
 		return this.logger;
 	}
+	
+	public void log(String msg, Level level) {
+		System.out.println(msg);
+		this.logger.log(level, msg);
+	}
 		
 }

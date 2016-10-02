@@ -123,6 +123,8 @@ public class AppConfig {
     	s.setSpLength(Integer.parseInt(env.getRequiredProperty("sp.default.length")));
     	s.setSpRange(Integer.parseInt(env.getRequiredProperty("sp.default.range")));
     	s.setSpRes(Integer.parseInt(env.getRequiredProperty("sp.default.res")));
+    	s.setHasHeader(Boolean.parseBoolean(env.getRequiredProperty("csv.hasHeader")));
+    	s.setDebug(Boolean.parseBoolean(env.getRequiredProperty("mode.debug")));
     	
     	return s;
     }

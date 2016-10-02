@@ -6,6 +6,13 @@ public interface RecordingService {
 
 	Double getRecordingLength(String fpath);
 	
+	/**
+	 * Convert MAV to MP3. The mp3 file has the same name as the mav file,
+	 * and is saved in the temporary folder indicated in the properties file.
+	 *  
+	 * @param fpath
+	 * @return
+	 */
 	boolean convertToMPEG3(String fpath);
 	
 	/**

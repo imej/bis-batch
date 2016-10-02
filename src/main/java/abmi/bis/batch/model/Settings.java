@@ -13,6 +13,8 @@ public class Settings {
 	private int spHeight;
 	private int spRange;
 	private int spRes;
+	private boolean hasHeader;
+	private boolean debug;
 
 	public String getSoxCmd() {
 		return soxCmd;
@@ -100,6 +102,22 @@ public class Settings {
 
 	public void setSoxDir(String soxDir) {
 		this.soxDir = soxDir;
+	}
+
+	public boolean isHasHeader() {
+		return hasHeader;
+	}
+
+	public void setHasHeader(boolean hasHeader) {
+		this.hasHeader = hasHeader;
+	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 }

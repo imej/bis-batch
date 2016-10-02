@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
@@ -68,8 +69,7 @@ public class RecordingServiceImpl implements RecordingService {
         int res = runCmd(cmd,output);
         if ( res > 0 ) {
         	String msg = "Error converting file to mp3: "+Arrays.toString(output.toArray());
-            System.out.println(msg);
-            customLogger.getLogger().severe(msg);
+        	customLogger.log(msg, Level.SEVERE);
             return false;
         }
         
@@ -91,7 +91,8 @@ public class RecordingServiceImpl implements RecordingService {
 					+ row.getFileName().substring(0, row.getFileName().length()-4);
 			File dir = new File(spTempPath);
 			if (!dir.mkdir()) {
-				System.out.println("cannot create dir " + spTempPath);
+				String msg = "Error creating spectrograms: canont create directory " + spTempPath;
+				customLogger.log(msg, Level.SEVERE);
 				return false;
 			}
 			
@@ -125,9 +126,9 @@ public class RecordingServiceImpl implements RecordingService {
 					
 					output.clear();
 					if (runCmd(cmd, output) > 0) {
-						/* error */
-						System.out.println(output);
-						break;
+						String msg = "Error creating spectrograms: " + output;
+						customLogger.log(msg, Level.SEVERE);
+						return false;
 					}
 					
 					// add spectrogram to row
@@ -166,6 +167,8 @@ public class RecordingServiceImpl implements RecordingService {
 				} while (segs >= 0);
 			} catch (Exception e) {
 				e.printStackTrace();
+				String msg = "Error creating spectrograms: " + e.getMessage();
+				customLogger.log(msg, Level.SEVERE);
 				return false;
 			}
 			
@@ -186,9 +189,22 @@ public class RecordingServiceImpl implements RecordingService {
 	private int soxi(String filep, String param, ArrayList<String> output) {
 		String cmd = settings.getSoxiCmd() + " " + param + " " + filep;
         int r = runCmd(cmd,output);
-        if ( r == 1 ) System.out.println("Return 1 - Error in commandline parameters...");
-        if ( r == 2 ) System.out.println("Return 2 - Error in processing command...");
-        if ( r == 3 ) System.out.println("Return 3 - Exception in command processing code...");
+        
+        String msg = null;
+        switch (r) {
+            case 1: msg = "Error running soxi: return 1 - Error in commandline parameters... command: " + cmd;
+                    break;
+            case 2: msg = "Error running soxi: Return 2 - Error in processing command... command: " + cmd;
+                    break;
+            case 3: msg = "Error running soxi: Return 3 - Exception in command processing code... command: " + cmd;
+                    break;
+            default: msg = "Error running soxi command: " + cmd;
+        }
+        
+        if (msg != null) {
+        	customLogger.log(msg, Level.SEVERE);
+        }
+
         return r;
 	}
 	
@@ -216,7 +232,8 @@ public class RecordingServiceImpl implements RecordingService {
 			
 			return p.exitValue();
 		} catch (IOException | InterruptedException e) {
-			System.out.println(e.getMessage());
+			String msg = "Error running command: " + cmd + " - " + e.getLocalizedMessage(); 
+			customLogger.log(msg, Level.SEVERE);
 		}
 		
 		return 3;
@@ -232,16 +249,14 @@ public class RecordingServiceImpl implements RecordingService {
 	private boolean checkFile(String fpath, String funcName) {
 		if (fpath == null || fpath.length() == 0 || !fpath.endsWith(".wav")) {
 			String msg = funcName + ": WAV file was not provided.";
-			System.out.println(msg);
-			customLogger.getLogger().severe(msg);
+			customLogger.log(msg, Level.SEVERE);
 			return false;
 		}
 		
 		File file = new File(fpath);
 		if (!file.exists()) {
 			String msg = funcName + ": " + fpath + " not exist.";
-			System.out.println(msg);
-			customLogger.getLogger().severe(msg);
+			customLogger.log(msg, Level.SEVERE);
 			return false;
 		}
 		
