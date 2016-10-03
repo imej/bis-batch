@@ -22,7 +22,7 @@ public interface DBDao {
 	 * @param fileName
 	 * @return
 	 */
-	boolean recordingExists(String fileName);
+	boolean recordingExists(CSVRow row);
 	
 	/**
 	 * Check if the replicate record exists
@@ -30,7 +30,7 @@ public interface DBDao {
 	 * @param repNum
 	 * @return
 	 */
-	boolean replicateExists(String fileName, int repNum);
+	boolean replicateExists(CSVRow row);
 	
 	/**
 	 * Insert a record into the recordings table.

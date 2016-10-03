@@ -17,16 +17,12 @@ import org.springframework.stereotype.Repository;
 import abmi.bis.batch.model.CSVRow;
 import abmi.bis.batch.model.Settings;
 import abmi.bis.batch.model.Spectrogram;
-import abmi.bis.batch.service.RecordingService;
 
 @Repository("dBDao")
 public class DBDaoImpl implements DBDao {
 	
 	@Autowired
 	private JdbcOperations jdbcOper;
-	
-	@Autowired
-	private RecordingService recordingService;
 	
 	@Autowired
 	private Settings settings;
@@ -80,17 +76,17 @@ public class DBDaoImpl implements DBDao {
 	}
 
 	@Override
-	public boolean recordingExists(String fileName) {
-        Integer i = (Integer)jdbcOper.queryForObject(COUNT_RECORDING_BY_FILE_NAME, 
-					new Object[] {fileName}, Integer.class);
+	public boolean recordingExists(CSVRow row) {
+		Integer i = (Integer)jdbcOper.queryForObject(COUNT_RECORDING_BY_FILE_NAME, 
+					new Object[] {getRecordingUrl(row)}, Integer.class);
 		
 		return i > 0;
 	}
 
 	@Override
-	public boolean replicateExists(String fileName, int repNum) {
+	public boolean replicateExists(CSVRow row) {
 		Integer i = (Integer)jdbcOper.queryForObject(COUNT_REPLICATE_BY_FILE_NAME_AND_NUM, 
-				new Object[] {fileName, repNum}, Integer.class);
+				new Object[] {getRecordingUrl(row), row.getReplicateNumber()}, Integer.class);
 	
 	    return i > 0;
 	}
@@ -107,10 +103,10 @@ public class DBDaoImpl implements DBDao {
 						ps.setLong(index++, getFieldDataId(row.getProject(), row.getSite(), row.getStation(), row.getYear(), row.getRound()));
 						ps.setDate(index++, new java.sql.Date(row.getCreated().getTime()));
 						ps.setTime(index++, new java.sql.Time(row.getCreated().getTime()));
-						ps.setString(index++, row.getFileName().substring(0, row.getFileName().length()-4));
+						ps.setString(index++, getRecordingUrl(row));
 						ps.setString(index++, "mp3");
-						ps.setDouble(index++, recordingService.getRecordingLength(row.getFolderPath() + File.separator + row.getFileName()));
-					    return ps;
+						ps.setDouble(index++, row.getRecordingLength());
+						return ps;
 					}
 				}, 
 				keyHolder);
@@ -146,7 +142,7 @@ public class DBDaoImpl implements DBDao {
 	@Override
 	public boolean addSpectrograms(CSVRow row) {
 		
-		String specDir = getSpectrogramDir(row);
+		String specDir = getRecordingDir(row) + row.getFileName().substring(0, row.getFileName().length()-4) + "/";
 		
 		jdbcOper.batchUpdate(INSERT_SPECTROGRAM, new BatchPreparedStatementSetter() {
 			
@@ -181,13 +177,18 @@ public class DBDaoImpl implements DBDao {
 		return l;
 	}
 	
+	private String getRecordingUrl(CSVRow row) {
+		return getRecordingDir(row) + "/" + row.getFileName().substring(0, row.getFileName().length()-4) + ".mp3";
+	}
+	
 	/**
-	 * Get the folder (URL) that the spectrograms will be saved on the web server.
+	 * Get the directory of a recording (mp3) and its spectrograms will be stored. 
+	 * It is: prefix/project/site/station/year/round
 	 * 
 	 * @param row
 	 * @return
 	 */
-	private String getSpectrogramDir(CSVRow row) {
+	private String getRecordingDir(CSVRow row) {
 		// URL root to mp3 and spectrograms
 		StringBuffer url = new StringBuffer(settings.getUrlPrefix());
 		
@@ -208,6 +209,7 @@ public class DBDaoImpl implements DBDao {
 		
 		return url.toString();
 	}
+	
 	
 	private String getSpectrogramFileName(Spectrogram spectrogram) {
 		if (spectrogram == null || spectrogram.getFilePath() == null || spectrogram.getFilePath().equals("")) {

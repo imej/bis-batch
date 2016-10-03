@@ -172,9 +172,15 @@ public class RecordingServiceImpl implements RecordingService {
 			}
 			
 			row.setSpectrograms(spectrograms);
-		}
+			
+			return true;
+		} 
 		
-		return true;
+		// Cannot get the length of the recording.
+		String msg = "Error creating spectrograms: cannot figure out recording length.";
+		customLogger.log(msg, Level.SEVERE);
+		
+		return false;
 	}
 	
 	/**
