@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,8 @@ public class CSVServiceImpl implements CSVService {
 	
 	public List<CSVRow> parse(String filePath) {
 		List<CSVRow> list = null;
-		Logger logger = customLogger.getLogger();
 		
-		logger.info("Start parsing file: " + filePath);
+		customLogger.log("Start parsing file: " + filePath, Level.INFO);
 		
 		CSVReader reader = null;
 		int i = 1;
@@ -38,9 +37,9 @@ public class CSVServiceImpl implements CSVService {
 			prop.load(input);
 			Boolean hasHeader = prop.getProperty("csv.hasHeader").equals("true");
 			if ( hasHeader ) {
-				logger.info("First row includes header columns.");
+				customLogger.log("First row includes header columns.", Level.INFO);
 			} else {
-				logger.info("First row does NOT include header columns.");
+				customLogger.log("First row does NOT include header columns.", Level.INFO);
 			}
 			
 			CSVParser parser = new CSVParser(CSVParser.DEFAULT_SEPARATOR, 
@@ -85,10 +84,10 @@ public class CSVServiceImpl implements CSVService {
 				
 			}
 			
-			logger.info("Complete parsing file: " + filePath + ". " + list.size() + " rows are received.");
+			customLogger.log("Complete parsing file: " + filePath + ". " + list.size() + " rows are received.", Level.INFO);
 			
 		} catch (Exception e) {
-			logger.severe("ERROR: " + e.getMessage());
+			customLogger.log("ERROR: " + e.getMessage(), Level.SEVERE);
 			e.printStackTrace();
 		}
 				

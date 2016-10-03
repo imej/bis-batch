@@ -1,7 +1,7 @@
 package abmi.bis.batch;
 
 import java.io.File;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -20,27 +20,27 @@ public class App {
 		AppController appCon = ctx.getBean(AppController.class);
 		CustomLogger customLogger = ctx.getBean(CustomLogger.class);
 		
-		Logger logger = customLogger.getLogger();
-		logger.info("Batch started.");
+		customLogger.log("Batch started.", Level.INFO);
 		
 		if (args.length == 0) {
-			logger.severe("CSV file is not provided.");
+			customLogger.log("CSV file is not provided.", Level.SEVERE);
 			return;
 		}
 		
 		File file = new File(args[0]);
 		if ( !file.exists() ) {
-			logger.severe("'" + args[0] + "' does not exist.");
+			customLogger.log("'" + args[0] + "' does not exist.", Level.SEVERE);
 			return;
 		}
 		
 		if (!appCon.isReady(args[0])) {
-			logger.severe("Cannot continue.");
+			customLogger.log("Cannot continue.", Level.SEVERE);
 			return;
 		}
 		
         appCon.processCSV(args[0]);
 		
-		logger.info("All done.");
+		customLogger.log("All done.", Level.SEVERE);
+		
 	}
 }
