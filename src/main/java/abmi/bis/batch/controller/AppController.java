@@ -205,7 +205,7 @@ public class AppController {
 			/*
 			 * STEP 4: update database
 			 */
-			
+			dBService.updateDB(row);
 		}
 	}
 }

@@ -38,8 +38,8 @@ public class DBDaoImpl implements DBDao {
             "    AND field_data.year = ? " +
             "    AND field_data.round = ?";
 
-	private static final String COUNT_RECORDING_BY_FILE_NAME = 
-			"SELECT COUNT(record_id) FROM recordings " +
+	private static final String QUERY_RECORDING_ID_BY_FILE_NAME = 
+			"SELECT record_id FROM recordings " +
             "WHERE file_name = ?";
 	
 	private static final String COUNT_REPLICATE_BY_FILE_NAME_AND_NUM = 
@@ -54,8 +54,8 @@ public class DBDaoImpl implements DBDao {
 	
 	private static final String INSERT_REPLICATE = 
 	        "INSERT INTO replicates " +
-            "    (record_id, rep_num, observer, method) " +
-            "VALUES (?, ?, ?, ?)";
+            "    (record_id, rep_num, observer, method, status) " +
+            "VALUES (?, ?, ?, ?, ?)";
 	
 	private static final String INSERT_SPECTROGRAM = 
 	        "INSERT INTO spectrograms " +
@@ -76,11 +76,8 @@ public class DBDaoImpl implements DBDao {
 	}
 
 	@Override
-	public boolean recordingExists(CSVRow row) {
-		Integer i = (Integer)jdbcOper.queryForObject(COUNT_RECORDING_BY_FILE_NAME, 
-					new Object[] {getRecordingUrl(row)}, Integer.class);
-		
-		return i > 0;
+	public boolean recordingExists(CSVRow row) {	
+		return findRecordingId(row) > 0;
 	}
 
 	@Override
@@ -129,7 +126,8 @@ public class DBDaoImpl implements DBDao {
 						ps.setInt(index++, row.getReplicateNumber());
 						ps.setInt(index++, row.getObserver());
 						ps.setLong(index++, row.getMethod());
-
+						ps.setLong(index++, 1L);
+						
                         return ps;
 					}
 				}, 
@@ -178,7 +176,7 @@ public class DBDaoImpl implements DBDao {
 	}
 	
 	private String getRecordingUrl(CSVRow row) {
-		return getRecordingDir(row) + "/" + row.getFileName().substring(0, row.getFileName().length()-4) + ".mp3";
+		return getRecordingDir(row) + row.getFileName().substring(0, row.getFileName().length()-4) + ".mp3";
 	}
 	
 	/**
@@ -220,5 +218,18 @@ public class DBDaoImpl implements DBDao {
 		String[] dirs = spectrogram.getFilePath().split(sep);
 		
 		return dirs[dirs.length-1];
+	}
+
+	@Override
+	public long findRecordingId(CSVRow row) {
+		Long l;
+		
+		try {
+			l = (Long)jdbcOper.queryForObject(QUERY_RECORDING_ID_BY_FILE_NAME, 
+				new Object[] {getRecordingUrl(row)}, Long.class);
+			return l;
+		} catch (EmptyResultDataAccessException e) {
+			return -1;
+		}
 	}
 }

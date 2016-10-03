@@ -47,14 +47,18 @@ public class DBServiceImpl implements DBService {
 			if (dBDao.replicateExists(row)) {
 				customLogger.log("Existing replicate, will not update replicate table. Row#" + 
 			                      row.getId(), Level.INFO);
-				return true;
 			} else {
-				
-				
+				row.setRecordId(dBDao.findRecordingId(row));
+				dBDao.addReplicate(row);
 			}
-		} 
+		} else {
+			dBDao.addRecording(row);
+			dBDao.addSpectrograms(row);
+			dBDao.addReplicate(row);
+		}
 		
-        return false;
+		customLogger.log("Successfully updated database for row #" + row.getId(), Level.INFO);
+        return true;
 	}
 
 }

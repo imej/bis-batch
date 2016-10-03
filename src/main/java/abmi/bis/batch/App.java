@@ -40,7 +40,7 @@ public class App {
 		
         appCon.processCSV(args[0]);
 		
-		customLogger.log("All done.", Level.SEVERE);
+		customLogger.log("All done.", Level.INFO);
 		
 	}
 }

@@ -58,4 +58,12 @@ public interface DBDao {
 	 */
 	boolean addSpectrograms(CSVRow row);
 	
+	/**
+	 * Get the existing recording ID in table recordings for a row.
+	 * return -1 if it does not exist.
+	 * 
+	 * @param row
+	 * @return
+	 */
+	long findRecordingId(CSVRow row);
 }
