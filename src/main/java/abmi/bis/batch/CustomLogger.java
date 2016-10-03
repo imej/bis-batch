@@ -32,10 +32,7 @@ public class CustomLogger {
 	public void log(String msg, Level level) {
 		if (msg != null) {
 			System.out.println(msg);
-			
-			if (!msg.endsWith("\n")) {
-				msg += "\n";
-			}
+
 			this.logger.log(level, msg);
 		}
 		

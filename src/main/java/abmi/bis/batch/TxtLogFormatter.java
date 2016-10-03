@@ -22,7 +22,7 @@ public class TxtLogFormatter extends Formatter {
 		buf.append(formatMessage(record));
 		buf.append('\n');
 		
-		return buf.toString();
+		return buf.toString().replaceAll("\n", System.lineSeparator());
 	}
 	
 	private String calcDate(long millisecs) {
