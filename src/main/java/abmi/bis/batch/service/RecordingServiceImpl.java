@@ -12,6 +12,7 @@ import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -261,6 +262,41 @@ public class RecordingServiceImpl implements RecordingService {
 		if (!file.exists()) {
 			String msg = funcName + ": " + fpath + " not exist.";
 			customLogger.log(msg, Level.SEVERE);
+			return false;
+		}
+		
+		return true;
+	}
+
+	@Override
+	public boolean copyFiles(CSVRow row) {
+		String tofld = settings.getServerFolder();
+		if (!tofld.endsWith(File.separator)) tofld += File.separator; 
+		tofld += row.getProject() + 
+				File.separator + row.getSite() + File.separator + row.getStation() + 
+				File.separator + row.getYear() + File.separator + row.getRound() + File.separator;
+		
+		String fromfld = settings.getTempDir();
+		if (!fromfld.endsWith(File.separator)) fromfld += File.separator;
+		
+		String fn = row.getFileName().substring(0, row.getFileName().length()-4);
+		String mp3 = fn + ".mp3";
+		
+		try {
+			FileUtils.copyFileToDirectory(new File(fromfld + mp3), new File(tofld));
+		} catch (IOException e) {
+			customLogger.log("Error copying file: from " + fromfld + mp3 + " to " + tofld, Level.SEVERE);
+			customLogger.log("Error copying file: " + e.getMessage(), Level.SEVERE);
+			e.printStackTrace();
+			return false;
+		}
+		
+		try {
+			FileUtils.copyDirectory(new File(fromfld + fn), new File(tofld + fn));
+		} catch (IOException e) {
+			customLogger.log("Error copying folder: from " + fromfld + fn + " to " + tofld + fn, Level.SEVERE);
+			customLogger.log("Error copying folder: " + e.getMessage(), Level.SEVERE);
+			e.printStackTrace();
 			return false;
 		}
 		

@@ -125,6 +125,7 @@ public class AppConfig {
     	s.setSpRes(Integer.parseInt(env.getRequiredProperty("sp.default.res")));
     	s.setHasHeader(Boolean.parseBoolean(env.getRequiredProperty("csv.hasHeader")));
     	s.setDebug(Boolean.parseBoolean(env.getRequiredProperty("mode.debug")));
+    	s.setServerFolder(env.getRequiredProperty("recording.folder"));
     	
     	return s;
     }

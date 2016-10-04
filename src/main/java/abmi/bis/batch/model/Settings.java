@@ -15,6 +15,7 @@ public class Settings {
 	private int spRes;
 	private boolean hasHeader;
 	private boolean debug;
+	private String serverFolder;
 
 	public String getSoxCmd() {
 		return soxCmd;
@@ -118,6 +119,14 @@ public class Settings {
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+
+	public String getServerFolder() {
+		return serverFolder;
+	}
+
+	public void setServerFolder(String serverFolder) {
+		this.serverFolder = serverFolder;
 	}
 
 }

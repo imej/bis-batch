@@ -25,4 +25,12 @@ public interface RecordingService {
 	 */
 	boolean createSpectrograms(CSVRow row);
 	
+	/**
+	 * Copy files to the server
+	 * 
+	 * @param row
+	 * @return
+	 */
+	boolean copyFiles(CSVRow row);
+	
 }

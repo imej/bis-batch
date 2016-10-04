@@ -1,11 +1,13 @@
 package abmi.bis.batch.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -181,16 +183,19 @@ public class AppController {
 			
 			if (row.getRecordingLength() == null || !(row.getRecordingLength() > 0)) {
 				msg = "Error: zero length recording. Skip row #" + row.getId();
+				customLogger.log(msg, Level.SEVERE);
 				continue;
 			}
 			
 			if ( !recordingService.convertToMPEG3(row.getWavPath()) ) {
-				msg = "Error: cannot convert to mp3. Skip row #" + row.getId();
+				msg = "Error: failed to convert to mp3. Skip row #" + row.getId();
+				customLogger.log(msg, Level.SEVERE);
 				continue;
 			}
 			
 			if ( !recordingService.createSpectrograms(row) ) {
-				msg = "Error: cannot create spectrograms. Skip row #" + row.getId();
+				msg = "Error: failed to create spectrograms. Skip row #" + row.getId();
+				customLogger.log(msg, Level.SEVERE);
 				continue;
 			}
 			
@@ -200,12 +205,28 @@ public class AppController {
 			 *         - context/static/recordings/project/site/station/year/round/.mp3
 			 *         - context/static/recordings/project/site/station/year/round/mp3_file_name/.png
 			 */
-			
+			if ( !recordingService.copyFiles(row) ) {
+				msg = "Error: failed to copy files to server. Skip row #" + row.getId();
+				customLogger.log(msg, Level.SEVERE);
+				continue;
+			}
 			
 			/*
 			 * STEP 4: update database
 			 */
-			dBService.updateDB(row);
+			if ( !dBService.updateDB(row) ) {
+				msg = "Error: failed to update database. Skip row #" + row.getId();
+				customLogger.log(msg, Level.SEVERE);
+				continue;
+			}
+		}
+		
+		// Delete temporary contents.
+		try {
+			FileUtils.cleanDirectory(new File(settings.getTempDir()));
+		} catch (IOException e) {
+			customLogger.log("Error: failed to clean the contents of folder " + settings.getTempDir(), Level.SEVERE);
+			e.printStackTrace();
 		}
 	}
 }
