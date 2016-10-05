@@ -2,14 +2,14 @@ package abmi.bis.batch.model;
 
 public class Spectrogram {
 
-	private String filePath;
+	private String fileName;
 	private int width;
 	private int height;
-	public String getFilePath() {
-		return filePath;
+	public String getFileName() {
+		return fileName;
 	}
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	public int getWidth() {
 		return width;

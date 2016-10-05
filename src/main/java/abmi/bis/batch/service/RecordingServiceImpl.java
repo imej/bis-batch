@@ -97,7 +97,7 @@ public class RecordingServiceImpl implements RecordingService {
 				return false;
 			}
 			
-			String outPath;
+			String outPath, fileName;
 			Double lenTotal = row.getRecordingLength();
 			Spectrogram tempSpec;
 			BufferedImage readImage = null;
@@ -112,7 +112,8 @@ public class RecordingServiceImpl implements RecordingService {
 				String ch = "M", remix = "remix -";
 				do {
 					/* output file segment name */
-					outPath = spTempPath + File.separator + ch + segs + ".png";
+					fileName = ch + (segs>9 ? segs : "0" + segs) + ".png";
+					outPath = spTempPath + File.separator + fileName;
 					
 					if ( process + start > lenTotal ) process = lenTotal - start;
 					
@@ -133,7 +134,7 @@ public class RecordingServiceImpl implements RecordingService {
 					
 					// add spectrogram to row
 					tempSpec = new Spectrogram();
-					tempSpec.setFilePath(outPath);
+					tempSpec.setFileName(fileName);
 					
 					readImage = ImageIO.read(new File(outPath));
 					tempSpec.setWidth(readImage.getWidth());
