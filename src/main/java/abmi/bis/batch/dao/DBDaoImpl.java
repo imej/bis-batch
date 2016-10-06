@@ -54,8 +54,8 @@ public class DBDaoImpl implements DBDao {
 	
 	private static final String INSERT_REPLICATE = 
 	        "INSERT INTO replicates " +
-            "    (record_id, rep_num, observer, method, status) " +
-            "VALUES (?, ?, ?, ?, ?)";
+            "    (record_id, rep_num, observer, method, status, assign_num) " +
+            "VALUES (?, ?, ?, ?, ?, ?)";
 	
 	private static final String INSERT_SPECTROGRAM = 
 	        "INSERT INTO spectrograms " +
@@ -127,6 +127,7 @@ public class DBDaoImpl implements DBDao {
 						ps.setInt(index++, row.getObserver());
 						ps.setLong(index++, row.getMethod());
 						ps.setLong(index++, 1L);
+						ps.setLong(index++, row.getLANumber());
 						
                         return ps;
 					}
