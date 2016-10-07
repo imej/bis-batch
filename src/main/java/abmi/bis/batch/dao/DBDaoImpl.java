@@ -1,6 +1,5 @@
 package abmi.bis.batch.dao;
 
-//import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -23,9 +22,6 @@ public class DBDaoImpl implements DBDao {
 	
 	@Autowired
 	private JdbcOperations jdbcOper;
-	
-//	@Autowired
-//	private Settings settings;
 	
 	private static final String QUERY_FIELD_DATA_ID = 
 			"SELECT field_data.fd_id FROM projects " +
@@ -141,8 +137,6 @@ public class DBDaoImpl implements DBDao {
 	@Override
 	public boolean addSpectrograms(CSVRow row) {
 		
-		//String specDir = getRecordingDir(row) + row.getFileName().substring(0, row.getFileName().length()-4) + "/";
-		
 		jdbcOper.batchUpdate(INSERT_SPECTROGRAM, new BatchPreparedStatementSetter() {
 			
 			@Override
@@ -150,7 +144,6 @@ public class DBDaoImpl implements DBDao {
 				Spectrogram sp = row.getSpectrograms().get(i);
 				int index = 1;
 				ps.setLong(index++, row.getRecordId());
-				//ps.setString(index++, specDir + getSpectrogramFileName(sp));
 				ps.setString(index++, sp.getFileName());
 				ps.setInt(index++, sp.getWidth());
 				ps.setLong(index++, sp.getHeight());
@@ -176,52 +169,7 @@ public class DBDaoImpl implements DBDao {
 		}
 		return l;
 	}
-	
-//	private String getRecordingUrl(CSVRow row) {
-//		return getRecordingDir(row) + row.getFileName().substring(0, row.getFileName().length()-4) + ".mp3";
-//	}
-	
-	/**
-	 * Get the directory of a recording (mp3) and its spectrograms will be stored. 
-	 * It is: prefix/project/site/station/year/round
-	 * 
-	 * @param row
-	 * @return
-	 */
-//	private String getRecordingDir(CSVRow row) {
-//		// URL root to mp3 and spectrograms
-//		StringBuffer url = new StringBuffer(settings.getUrlPrefix());
-//		
-//		if (!url.toString().endsWith("/")) {
-//			url.append("/");
-//		}
-//		
-//		url.append(row.getProject());
-//		url.append("/");
-//		url.append(row.getSite());
-//		url.append("/");
-//		url.append(row.getStation());
-//		url.append("/");
-//		url.append(row.getYear());
-//		url.append("/");
-//		url.append(row.getRound());
-//		url.append("/");
-//		
-//		return url.toString();
-//	}
-	
-	
-//	private String getSpectrogramFileName(Spectrogram spectrogram) {
-//		if (spectrogram == null || spectrogram.getFilePath() == null || spectrogram.getFilePath().equals("")) {
-//			return null;
-//		}
-//		
-//		String sep = File.separator.equals("\\") ? "\\\\" : File.separator;
-//		String[] dirs = spectrogram.getFilePath().split(sep);
-//		
-//		return dirs[dirs.length-1];
-//	}
-
+		
 	@Override
 	public long findRecordingId(CSVRow row) {
 		Long l;

@@ -90,7 +90,7 @@
       It prevents the properties files from being copied to the jar file.
       I need to find a better way to handle this.  
       -->
-      <!--  
+        
       <resources>
           <resource>
               <directory>src/main/resources</directory>
@@ -99,7 +99,7 @@
               </excludes>
           </resource>
       </resources>
-      -->
+      
       <pluginManagement>
 	      <plugins>
 		      <plugin>

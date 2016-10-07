@@ -3,7 +3,6 @@ package abmi.bis.batch.model;
 public class Settings {
 
 	private String tempDir;
-	private String urlPrefix;
 	private String wac2wavExe;
 	private String soxDir;
 	private String soxCmd;
@@ -79,14 +78,6 @@ public class Settings {
 
 	public void setTempDir(String tempDir) {
 		this.tempDir = tempDir;
-	}
-
-	public String getUrlPrefix() {
-		return urlPrefix;
-	}
-
-	public void setUrlPrefix(String urlPrefix) {
-		this.urlPrefix = urlPrefix;
 	}
 
 	public String getWac2wavExe() {

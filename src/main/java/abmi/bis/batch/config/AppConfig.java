@@ -114,7 +114,6 @@ public class AppConfig {
     	
     	s.setSoxDir(env.getRequiredProperty("sox.path"));
     	s.setTempDir(env.getRequiredProperty("temp.folder"));
-    	s.setUrlPrefix(env.getRequiredProperty("url.prefix"));
     	s.setWac2wavExe(env.getRequiredProperty("wac2wav.exe"));
     	s.setSoxCmd(env.getRequiredProperty("sox.sox.exe"));
     	s.setSoxiCmd(env.getRequiredProperty("sox.soxi.exe"));
