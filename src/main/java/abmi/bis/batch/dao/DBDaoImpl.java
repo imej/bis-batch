@@ -29,6 +29,7 @@ public class DBDaoImpl implements DBDao {
             "    INNER JOIN stations ON sites.site_id = stations.site_id " +
             "    INNER JOIN field_data ON stations.station_id = field_data.station_id " +
             "WHERE projects.proj_code = ? " + 
+            "    AND IFNULL(sites.site_group1, '') = ? " +
             "    AND sites.site_name = ? " +
             "    AND stations.station_name = ? " +
             "    AND field_data.year = ? " +
@@ -59,10 +60,10 @@ public class DBDaoImpl implements DBDao {
             "VALUES (?, ?, ?, ?)";
 	
 	@Override
-	public boolean isMetaDataReaday(String project, String site, String station, int year, int round) {
+	public boolean isMetaDataReaday(String project, String siteGrp, String siteName, String station, int year, int round) {
 		boolean rv = false;
 
-		Long fdId = getFieldDataId(project, site, station, year, round);
+		Long fdId = getFieldDataId(project, siteGrp, siteName, station, year, round);
 		
 		if (fdId != null && fdId > 0) {
 			rv = true;
@@ -93,7 +94,7 @@ public class DBDaoImpl implements DBDao {
 						PreparedStatement ps = conn.prepareStatement(INSERT_RECORDING, new String[]{"record_id"});
 						
 						int index = 1;
-						ps.setLong(index++, getFieldDataId(row.getProject(), row.getSite(), row.getStation(), row.getYear(), row.getRound()));
+						ps.setLong(index++, getFieldDataId(row.getProject(), row.getSiteGrp(), row.getSiteName(), row.getStation(), row.getYear(), row.getRound()));
 						ps.setDate(index++, new java.sql.Date(row.getCreated().getTime()));
 						ps.setTime(index++, new java.sql.Time(row.getCreated().getTime()));
 						ps.setString(index++, row.getFileName().substring(0, row.getFileName().length()-4));
@@ -158,12 +159,12 @@ public class DBDaoImpl implements DBDao {
 		return true;
 	}
 
-	private Long getFieldDataId(String project, String site, String station, int year, int round) {
+	private Long getFieldDataId(String project, String siteGrp, String siteName, String station, int year, int round) {
 		Long l;
 		
 		try {
 			l = (Long)jdbcOper.queryForObject(QUERY_FIELD_DATA_ID, 
-					new Object[] {project, site, station, year, round}, Long.class);
+					new Object[] {project, siteGrp, siteName, station, year, round}, Long.class);
 		} catch (EmptyResultDataAccessException e) {
 			l = -1L;
 		}

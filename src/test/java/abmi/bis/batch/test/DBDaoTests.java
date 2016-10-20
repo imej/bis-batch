@@ -22,20 +22,22 @@ public class DBDaoTests {
 	@Test
 	public void testGetFieldDataId() {
 		String project = "";
-		String site = "";
+		String siteGrp = "";
+		String siteName = "";
 		String station = "";
 		int year = 2008;
 		int round = 10;
 		
-		assertTrue("Empty project does not exist", !dbDao.isMetaDataReaday(project, site, station, year, round));
+		assertTrue("Empty project does not exist", !dbDao.isMetaDataReaday(project, siteGrp, siteName, station, year, round));
 		
-		project = "CAO";
-		site = "ExcitingSite";
-		station = "S1";
-		year = 2008;
-		round = 10;
+		project = "ABMI";
+		siteGrp = "";
+		siteName = "0272";
+		station = "NE";
+		year = 2016;
+		round = 1;
 		
-		assertTrue("Empty project does not exist", dbDao.isMetaDataReaday(project, site, station, year, round));
+		assertTrue("Empty project does not exist", dbDao.isMetaDataReaday(project, siteGrp, siteName, station, year, round));
 		
 	}
 	
@@ -69,14 +71,14 @@ public class DBDaoTests {
 		CSVRow row = new CSVRow();
 		
 		row.setId(1);
-		row.setFolderPath("C:\\temp\\bis-batch\\recordings\\temp");
-		row.setFileName("CAO-ExcitingSite-S1_20160621_053400.wav");
+		row.setFolderPath("C:\\temp\\bis-batch\\recordings\\open");
+		row.setFileName("ABMI-0272-NE_20160621_053400.wav");
 		row.setReplicateNumber(1);
         row.setLANumber(100);
         row.setMethod(11);
-        row.setObserver(1);
-		row.setYear(2008);
-		row.setRound(10);
+        row.setObserver(5);
+		row.setYear(2016);
+		row.setRound(1);
 		
 		long l = dbDao.addRecording(row);
 		

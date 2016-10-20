@@ -14,7 +14,7 @@ public interface DBDao {
 	 * @param round
 	 * @return
 	 */
-	boolean isMetaDataReaday(String project, String site, String station, int year, int round);
+	boolean isMetaDataReaday(String project, String siteGrp, String siteName, String station, int year, int round);
 	
 	/**
 	 * Check if the recording record exists in database.

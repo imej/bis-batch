@@ -33,7 +33,8 @@ public class CSVRow {
 	private long id;            // row# starts from 1 (it is probably the header row)
 	
 	private String project;     // -------------------- 
-	private String site;        // These fields are from fileName.
+	private String siteGrp;        // These fields are from fileName.
+	private String siteName;
 	private String station;     // The format of the fileName is project-site-station_date_time.
 	private Date created;       //     site can include '-' and "_0+1_" can appear between station and date
 	                            // ----------------------
@@ -118,7 +119,17 @@ public class CSVRow {
 		return project;
 	}
 	public String getSite() {
-		return site;
+		String rv = "";
+		if (siteGrp != null && !siteGrp.equals("")) {
+			rv += siteGrp + "-";
+		}
+		return rv + siteName;
+	}
+	public String getSiteGrp() {
+		return siteGrp;
+	}
+	public String getSiteName() {
+		return siteName;
 	}
 	public String getStation() {
 		return station;
@@ -179,12 +190,14 @@ public class CSVRow {
 				if (parts2.length == 3) {
 					// site does not include '-'
 					project = parts2[0];
-					site = parts2[1];
+					siteGrp = "";
+					siteName = parts2[1];
 					station = parts2[2];
 				} else if (parts2.length == 4) {
 					// site includes '-'
 					project = parts2[0];
-					site = parts2[1] + '-' + parts2[2];
+					siteGrp = parts2[1];
+					siteName = parts2[2];
 					station = parts2[3];
 				}
 			}
