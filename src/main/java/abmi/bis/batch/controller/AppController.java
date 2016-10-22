@@ -131,7 +131,7 @@ public class AppController {
 			if (settings.isDebug()) {
 				System.out.println(row);
 			}
-						
+				
 			// Do nothing if the recording file does not exist.
 			File file = null;
 			try {
@@ -140,13 +140,20 @@ public class AppController {
 				e.printStackTrace();
 			}
 			
-			if (file == null) {
+			if (file == null || !file.exists()) {
 				msg = "Error: File not exist. Skip row #" + row.getId();
 				customLogger.log(msg, Level.SEVERE);;
 				continue;
 			}
 			
-			// Recording file looks good, lets go
+			// Do nothing if the meta data is not ready.
+			if ( !dBService.isMetaDataReady(row) ) {
+				msg = "Error: Meta data is not ready. Skip row #" + row.getId();
+				customLogger.log(msg, Level.SEVERE);;
+				continue;
+			}
+			
+			// Everything looks good, lets go
 			/*
 			 * STEP 1: convert WAC to WAV when necessary
 			 */

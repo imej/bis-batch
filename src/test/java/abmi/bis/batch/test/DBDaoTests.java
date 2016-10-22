@@ -28,7 +28,7 @@ public class DBDaoTests {
 		int year = 2008;
 		int round = 10;
 		
-		assertTrue("Empty project does not exist", !dbDao.isMetaDataReaday(project, siteGrp, siteName, station, year, round));
+		assertTrue("Empty project does not exist", !dbDao.isMetaDataReady(project, siteGrp, siteName, station, year, round));
 		
 		project = "ABMI";
 		siteGrp = "";
@@ -37,7 +37,7 @@ public class DBDaoTests {
 		year = 2016;
 		round = 1;
 		
-		assertTrue("Empty project does not exist", dbDao.isMetaDataReaday(project, siteGrp, siteName, station, year, round));
+		assertTrue("Empty project does not exist", dbDao.isMetaDataReady(project, siteGrp, siteName, station, year, round));
 		
 	}
 	

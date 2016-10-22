@@ -17,4 +17,11 @@ public interface DBService {
 	 */
 	Boolean updateDB(CSVRow row);
 	
+	/**
+	 * Check if the meta data is ready for a recording.
+	 * @param row
+	 * @return
+	 */
+	Boolean isMetaDataReady(CSVRow row);
+	
 }

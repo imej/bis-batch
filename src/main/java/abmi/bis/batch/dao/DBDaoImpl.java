@@ -60,7 +60,7 @@ public class DBDaoImpl implements DBDao {
             "VALUES (?, ?, ?, ?)";
 	
 	@Override
-	public boolean isMetaDataReaday(String project, String siteGrp, String siteName, String station, int year, int round) {
+	public boolean isMetaDataReady(String project, String siteGrp, String siteName, String station, int year, int round) {
 		boolean rv = false;
 
 		Long fdId = getFieldDataId(project, siteGrp, siteName, station, year, round);

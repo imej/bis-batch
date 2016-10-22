@@ -61,4 +61,10 @@ public class DBServiceImpl implements DBService {
         return true;
 	}
 
+	@Override
+	public Boolean isMetaDataReady(CSVRow row) {
+		return dBDao.isMetaDataReady(row.getProject(), row.getSiteGrp(), row.getSiteName(), row.getStation(), 
+				row.getYear(), row.getRound());
+	}
+
 }
