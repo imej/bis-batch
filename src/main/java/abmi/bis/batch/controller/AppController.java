@@ -99,8 +99,18 @@ public class AppController {
 			return false;
         }
         
-        // TODO test network drive
+        // check network drive
+        String serverFolder = settings.getServerFolder();
+        if (serverFolder == null) {
+        	customLogger.log(messageSource.getMessage("svrdir.not.define", null, Locale.getDefault()), Level.SEVERE);
+        	return false;
+        }
         
+        file = new File(serverFolder);
+        if ( !file.exists() ) {
+        	customLogger.log(messageSource.getMessage("svrdir.not.exist", new String[] {serverFolder}, Locale.getDefault()), Level.SEVERE);
+			return false;
+        }
         
         
         // check db connection

@@ -84,13 +84,6 @@
       </dependency>
   </dependencies>
   <build>
-      <!-- 
-      The following is commented out when testing in eclipse.
-      It needs to be uncommented before generating of the installation version.
-      It prevents the properties files from being copied to the jar file.
-      I need to find a better way to handle this.  
-      -->
-        
       <resources>
           <resource>
               <directory>src/main/resources</directory>
